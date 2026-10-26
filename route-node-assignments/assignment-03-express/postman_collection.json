@@ -1,0 +1,322 @@
+{
+  "info": {
+    "name": "assignment-03-express - Muhammad Magdy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Exported assignment collection. Run in order against a fresh local database. Destructive operations affect assignment data only. No hosted documentation URL is claimed."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3003"
+    },
+    {
+      "key": "userId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Add User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/user",
+        "description": "Add User. See README for setup, input requirements and error responses.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ahmed\",\n  \"email\": \"ahmed@example.com\",\n  \"age\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('userId', pm.response.json().user.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reject Duplicate Email",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/user",
+        "description": "Reject Duplicate Email. See README for setup, input requirements and error responses.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ahmed\",\n  \"email\": \"ahmed@example.com\",\n  \"age\": 25\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 409', () => pm.response.to.have.status(409));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/user",
+        "description": "Get All Users. See README for setup, input requirements and error responses."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get User By ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/user/{{userId}}",
+        "description": "Get User By ID. See README for setup, input requirements and error responses."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/user/{{userId}}",
+        "description": "Update User. See README for setup, input requirements and error responses.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"age\": 30\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Find User By Name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/user/getByName?name=Ahmed",
+        "description": "Find User By Name. See README for setup, input requirements and error responses."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Filter By Minimum Age",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/user/filter?minAge=18",
+        "description": "Filter By Minimum Age. See README for setup, input requirements and error responses."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete User By ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/user/{{userId}}",
+        "description": "Delete User By ID. See README for setup, input requirements and error responses."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Deleted User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/user/{{userId}}",
+        "description": "Get Deleted User. See README for setup, input requirements and error responses."
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add User For Body Delete",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/user",
+        "description": "Add User For Body Delete. See README for setup, input requirements and error responses.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Mona\",\n  \"email\": \"mona@example.com\",\n  \"age\": 22\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 201', () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('userId',pm.response.json().user.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete User From Body",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/user",
+        "description": "Delete User From Body. See README for setup, input requirements and error responses.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{userId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

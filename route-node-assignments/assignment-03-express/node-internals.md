@@ -1,0 +1,10 @@
+# Part 1: Node.js internals
+
+1. The event loop coordinates execution of JavaScript callbacks when work becomes ready. Its phases include timers, pending callbacks, poll (I/O), check (`setImmediate`), and close callbacks. JavaScript callbacks run one at a time on the main event-loop thread. Microtasks are processed at callback boundaries; `process.nextTick` has its own queue. Precise timer ordering depends on context and Node/libuv version.
+2. libuv is the cross-platform C library behind Node's event loop, asynchronous I/O, networking, timers, and worker pool. Network I/O normally uses the operating system's event notification facilities rather than occupying a worker thread per connection.
+3. Node initiates work through native bindings. The OS handles suitable nonblocking I/O; libuv's pool handles operations such as many filesystem calls, selected DNS operations, crypto, and compression. When work is ready, Node schedules the completion callback; promises schedule reactions as microtasks. Async does not mean every operation creates a thread.
+4. The call stack tracks currently executing function calls. Queues hold callbacks or reactions waiting to run (there is not one universal queue). The event loop advances its phases and dispatches eligible callbacks when JavaScript can run them.
+5. The libuv thread pool defaults to four threads. Set `UV_THREADPOOL_SIZE=8 node app.js` before starting Node (on PowerShell: `$env:UV_THREADPOOL_SIZE=8; node app.js`). This changes the native worker pool, not the number of JavaScript main threads. Larger is not automatically faster.
+6. Synchronous operations and CPU-heavy JavaScript occupy the main thread and delay other callbacks. Async APIs allow the event loop to process other work while an operation is pending. Use async I/O for request handlers and worker_threads or separate workers for substantial CPU work; marking a CPU-heavy function `async` does not make it nonblocking.
+
+References: official Node.js guides at https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick and https://nodejs.org/api/cli.html#uv_threadpool_sizesize .

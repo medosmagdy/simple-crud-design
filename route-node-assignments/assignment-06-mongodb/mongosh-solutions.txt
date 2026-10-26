@@ -1,0 +1,40 @@
+// Assignment 6 (source PDF labelled Assignment 7). Run against a clean database.
+db = db.getSiblingDB('route_books');
+// 1
+ db.createCollection('books',{validator:{$jsonSchema:{bsonType:'object',required:['title'],properties:{title:{bsonType:'string',minLength:1,pattern:'\\S'}}}}});
+// 2: implicit collection
+ db.authors.insertOne({name:'George Orwell'});
+// 3
+ db.createCollection('logs',{capped:true,size:1024*1024});
+// 4
+ db.books.createIndex({title:1});
+// 5
+ const braveId=db.books.insertOne({title:'Brave New World',author:'Aldous Huxley',year:NumberInt(1932),genres:['Science Fiction']}).insertedId;
+// 6
+ db.books.insertMany([{title:'Future',author:'A. Writer',year:NumberInt(2001),genres:['Science Fiction']},{title:'History',author:'B. Writer',year:NumberInt(1995),genres:['History']},{title:'Modern Life',author:'C. Writer',year:NumberInt(2005),genres:['Drama']}]);
+// 7: logs.bookId references books._id for question 19
+ db.logs.insertOne({bookId:braveId,message:'Book created',createdAt:new Date()});
+// 8
+ db.books.updateOne({title:'Future'},{$set:{year:NumberInt(2022)}});
+// 9
+ db.books.findOne({title:'Brave New World'});
+// 10
+ db.books.find({year:{$gte:1990,$lte:2010}});
+// 11
+ db.books.find({genres:'Science Fiction'});
+// 12
+ db.books.find().sort({year:-1,_id:1}).skip(2).limit(3);
+// 13
+ db.books.find({year:{$type:'int'}});
+// 14
+ db.books.find({genres:{$nin:['Horror','Science Fiction']}});
+// 15: destructive as requested; use a disposable assignment database
+ db.books.deleteMany({year:{$lt:2000}});
+// 16
+ db.books.aggregate([{$match:{year:{$gt:2000}}},{$sort:{year:-1,_id:1}}]);
+// 17
+ db.books.aggregate([{$match:{year:{$gt:2000}}},{$project:{_id:0,title:1,author:1,year:1}}]);
+// 18
+ db.books.aggregate([{$unwind:'$genres'}]);
+// 19
+ db.books.aggregate([{$lookup:{from:'logs',localField:'_id',foreignField:'bookId',as:'logs'}}]);
